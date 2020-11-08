@@ -11,19 +11,21 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update -y && \
     apt upgrade -y && \
     apt install unzip -y && \
-    apt install wordpress php libapache2-mod-php mysql-server php-mysql wget -y && \
+    apt install wordpress php libapache2-mod-php wget -y && \
     apt clean all && \
     rm -fr /var/cache/*
+
+#mysql 
+FROM mysql
+ENV CREATE_DATABASE wpdb
+COPY ./mysqlsetup.sql /docker-entrypoint-initdb.d/
+
 
 #WP Install
 RUN wget -P /var/www/html/ https://wordpress.org/latest.zip && \
     unzip /var/www/html/latest.zip -d /var/www/html/ && \
     rm -fr /var/www/html/latest.zip
 
-# RUN My SQL run and Config WPDB
-RUN service mysql start  && \
-    mysql -u root < ./mysqlsetup.sql && \
-    rm -fr ./mysqlsetup.sql*
 
 # Copy WP Conf
 RUN mv /var/www/html/wordpress/wp-config-sample.php /var/www/html/wordpress/wp-config.php
