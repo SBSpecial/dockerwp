@@ -1,3 +1,4 @@
+FROM mysql
 FROM ubuntu:20.04
 
 MAINTAINER Warren Eakins eakins.warren@gmail.com
@@ -15,8 +16,9 @@ RUN apt update -y && \
     apt clean all && \
     rm -fr /var/cache/*
 
-#mysql 
-FROM mysql
+
+#mysql
+#FROM mysql
 ENV CREATE_DATABASE wpdb
 COPY ./mysqlsetup.sql /docker-entrypoint-initdb.d/
 
